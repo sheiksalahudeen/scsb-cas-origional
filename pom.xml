@@ -6,6 +6,7 @@
 
     <groupId>org.recap</groupId>
     <artifactId>scsb-cas</artifactId>
+    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
     <build>
