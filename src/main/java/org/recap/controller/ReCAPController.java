@@ -1,9 +1,16 @@
 package org.recap.controller;
 
+import org.apache.catalina.connector.Connector;
 import org.jose4j.json.internal.json_simple.JSONObject;
 import org.recap.model.User;
 import org.recap.processor.UserProcessor;
+import org.recap.spring.ApplicationContextProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -62,4 +69,20 @@ public class ReCAPController {
         }
         return response.toString();
     }
+
+    @Bean
+    public EmbeddedServletContainerFactory servletContainerFactory() {
+        ApplicationContext applicationContext = ApplicationContextProvider.getInstance().getApplicationContext();
+        TomcatEmbeddedServletContainerFactory factory = applicationContext.getBean(TomcatEmbeddedServletContainerFactory.class);
+        if(null != factory) {
+            factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+                @Override
+                public void customize(Connector connector) {
+                    connector.setSecure(true);
+                }
+            });
+        }
+        return factory;
+    }
+
 }
